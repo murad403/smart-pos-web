@@ -13,7 +13,6 @@ const ITEMS_PER_PAGE = 8;
 
 type Category = "All" | "Starters" | "Mains" | "Drinks" | "Desserts";
 
-// Generate demo menu items
 const generateItems = (): MenuItem[] => {
   const baseItems: Omit<MenuItem, "id">[] = [
     {
@@ -100,7 +99,6 @@ const MenuSection = () => {
   const handlePayAtCounter = (name: string) => {
     setShowModal(false);
     setSelectedItems([]);
-    // Handle order submission
   };
 
   const catLabel = (cat: Category) => {
@@ -116,8 +114,8 @@ const MenuSection = () => {
 
   return (
     <div className="min-h-screen">
-
       <div className="max-w-7xl mx-auto px-4 py-4">
+
         {/* Search */}
         <div className="relative mb-4">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -136,41 +134,43 @@ const MenuSection = () => {
             <button
               key={cat}
               onClick={() => handleCategoryChange(cat)}
-              className={`px-4 py-1.5 rounded-xl text-sm font-medium transition-all border ${category === cat
+              className={`px-4 py-1.5 rounded-xl text-sm font-medium transition-all border ${
+                category === cat
                   ? "bg-blue-600 text-white border-blue-600"
                   : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-                }`}
+              }`}
             >
               {catLabel(cat)}
             </button>
           ))}
         </div>
 
-        <div>
-          {/* Menu Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-4">
-            {paginated.map((item) => (
-              <MenuCard
-                key={item.id}
-                item={item}
-                isSelected={!!selectedItems.find((s) => s.id === item.id)}
-                onSelect={handleSelect}
-              />
-            ))}
-          </div>
+        {/* Menu Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-4">
+          {paginated.map((item) => (
+            <MenuCard
+              key={item.id}
+              item={item}
+              isSelected={!!selectedItems.find((s) => s.id === item.id)}
+              onSelect={handleSelect}
+            />
+          ))}
+        </div>
 
-          {/* Pagination */}
+        {/* Pagination */}
+        <div className="pb-36 sm:pb-8">
           <CustomPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
         </div>
+
       </div>
 
-      {/* Bottom bar */}
+      {/* Bottom selected bar */}
       {selectedItems.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg px-4 py-3 flex items-center justify-between z-40">
+        <div className="fixed bottom-16 sm:bottom-0 left-0 right-0 bg-white border-t shadow-lg px-4 py-3 flex items-center justify-between z-[60]">
           <span className="text-gray-700 font-medium text-sm">
             {selectedItems.length} {t.itemsSelected}
           </span>

@@ -6,7 +6,7 @@ const StaffLayout = ({children}: {children: React.ReactNode}) => {
         <section>
             <StaffNavbar/>
 
-            <div className={`pt-18 pb-12 md:pb-0`}>
+            <div className={`pt-18 pb-12 md:pb-0 bg-[#FAF8F2]`}>
                 {children}
             </div>
         </section>
