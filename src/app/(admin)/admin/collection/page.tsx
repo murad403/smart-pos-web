@@ -1,10 +1,9 @@
+import CollectionSection from '@/components/shared/CollectionSection'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>
-      
-    </div>
+    <CollectionSection />
   )
 }
 
