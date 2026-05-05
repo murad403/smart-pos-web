@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Bell, ChevronDown } from "lucide-react";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 type OrderStatus = "ready" | "processing" | "accepted";
 
@@ -22,6 +23,7 @@ interface Order {
 }
 
 const CollectionPage = () => {
+  const { t } = useLocalLanguage();
   const [orderStatus, setOrderStatus] = useState<OrderStatus>("ready");
   const [expandedHistory, setExpandedHistory] = useState(false);
 
@@ -71,28 +73,28 @@ const CollectionPage = () => {
       orderNumber: 41,
       time: "11:30 AM",
       status: "COMPLETED",
-      items: "2 items . Takeaway",
+      items: `2 ${t.qty} . ${t.takeawayShort}`,
     },
     {
       id: "h2",
       orderNumber: 44,
       time: "11:25 AM",
       status: "COMPLETED",
-      items: "3 items . Delivery",
+      items: `3 ${t.qty} . ${t.delivery}`,
     },
     {
       id: "h3",
       orderNumber: 40,
       time: "11:10 AM",
       status: "COMPLETED",
-      items: "2 items . Dine in",
+      items: `2 ${t.qty} . ${t.dineInShort}`,
     },
     {
       id: "h4",
       orderNumber: 36,
       time: "10:50 AM",
       status: "COMPLETED",
-      items: "2 items . Delivery",
+      items: `2 ${t.qty} . ${t.delivery}`,
     },
   ];
 
@@ -114,11 +116,11 @@ const CollectionPage = () => {
   const getStatusBadgeLabel = (status: OrderStatus) => {
     switch (status) {
       case "ready":
-        return "Ready";
+        return t.ready;
       case "processing":
-        return "In Processing";
+        return t.inProcessing;
       case "accepted":
-        return "To Be Accepted";
+        return t.toBeAccepted;
       default:
         return status;
     }
@@ -128,8 +130,8 @@ const CollectionPage = () => {
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Collection</h1>
-        <p className="text-sm text-gray-600 mt-1">Active Orders</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.collection}</h1>
+        <p className="text-sm text-gray-600 mt-1">{t.activeOrders}</p>
       </div>
 
       {/* Order Status Tabs */}
@@ -145,10 +147,10 @@ const CollectionPage = () => {
             }`}
           >
             {status === "ready"
-              ? "Ready"
+              ? t.ready
               : status === "processing"
-              ? "In Processing"
-              : "Accepted"}
+              ? t.inProcessing
+              : t.accepted}
           </button>
         ))}
       </div>
@@ -157,7 +159,7 @@ const CollectionPage = () => {
       <div className="space-y-4 mb-8">
         {filteredOrders.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No {orderStatus} orders</p>
+            <p className="text-gray-500 text-lg">No {getStatusBadgeLabel(orderStatus)} {t.orders}</p>
           </div>
         ) : (
           filteredOrders.map((order) => (
@@ -188,7 +190,7 @@ const CollectionPage = () => {
                     )}
                   </div>
                   <div className="text-sm text-gray-600 mb-3">
-                    ORDER #{order.orderNumber}
+                    {t.order} #{order.orderNumber}
                   </div>
                 </div>
                 <button className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -202,35 +204,35 @@ const CollectionPage = () => {
                   <div key={item.id} className="flex items-center justify-between text-sm">
                     <div>
                       <span className="font-medium text-gray-900">{item.name}</span>
-                      <span className="text-gray-600 ml-2">Qty: {item.qty}</span>
+                      <span className="text-gray-600 ml-2">{t.qty}: {item.qty}</span>
                     </div>
                     {order.status === "ready" && (
                       <div className="flex gap-2">
                         <button className="px-3 py-2 cursor-pointer bg-gray-300 text-gray-600 rounded font-medium text-xs hover:bg-gray-400 transition-colors">
-                          CANCEL
+                          {t.cancel}
                         </button>
                         <button className="px-3 py-2 cursor-pointer bg-red-600 text-white rounded font-medium text-xs hover:bg-red-700 transition-colors">
-                          PICKUP
+                          {t.pickup}
                         </button>
                       </div>
                     )}
                     {order.status === "processing" && (
                       <div className="flex gap-2">
                         <button className="px-3 py-2 cursor-pointer bg-gray-300 text-gray-600 rounded font-medium text-xs hover:bg-gray-400 transition-colors">
-                          CANCEL
+                          {t.cancel}
                         </button>
                         <button className="px-3 py-2 cursor-pointer bg-blue-600 text-white rounded font-medium text-xs hover:bg-blue-700 transition-colors">
-                          PICKUP
+                          {t.pickup}
                         </button>
                       </div>
                     )}
                     {order.status === "accepted" && (
                       <div className="flex gap-2">
                         <button className="px-3 py-2 cursor-pointer bg-gray-300 text-gray-600 rounded font-medium text-xs hover:bg-gray-400 transition-colors">
-                          CANCEL
+                          {t.cancel}
                         </button>
                         <button className="px-3 py-2 cursor-pointer bg-red-600 text-white rounded font-medium text-xs hover:bg-red-700 transition-colors">
-                          ACCEPTED
+                          {t.accepted}
                         </button>
                       </div>
                     )}
@@ -248,7 +250,7 @@ const CollectionPage = () => {
           onClick={() => setExpandedHistory(!expandedHistory)}
           className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg  transition-colors"
         >
-          <h2 className="font-semibold text-gray-900">Order History (1)</h2>
+          <h2 className="font-semibold text-gray-900">{t.orderHistory} (1)</h2>
           <ChevronDown
             size={20}
             className={`text-gray-600 transition-transform ${expandedHistory ? "rotate-180" : ""}`}
@@ -261,7 +263,7 @@ const CollectionPage = () => {
               <div key={order.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                 <div className="flex-1">
                   <div className="font-medium text-gray-900">
-                    Order #{order.orderNumber} <span className="text-gray-600 text-sm ml-2">{order.time}</span>
+                    {t.order} #{order.orderNumber} <span className="text-gray-600 text-sm ml-2">{order.time}</span>
                   </div>
                   <div className="text-sm text-gray-600 mt-1">{order.items}</div>
                 </div>
@@ -270,7 +272,7 @@ const CollectionPage = () => {
                     {order.status}
                   </span>
                   <button className="ml-3 text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors">
-                    Cancel
+                    {t.cancel}
                   </button>
                 </div>
               </div>

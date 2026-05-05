@@ -33,27 +33,30 @@ const MainWrapper = ({
   children: React.ReactNode;
 }>) => {
   const pathName = usePathname();
-  const [locale, setLocale] = useState<Locale>(() => {
-    if (typeof window === "undefined") {
-      return defaultLocale;
-    }
-    
-
-    const storedLocale = window.localStorage.getItem(storageKey);
-    const initialLocale = isLocale(storedLocale) ? storedLocale : defaultLocale;
-
-    // Ensure English is always set on initial load if nothing stored
-    if (!storedLocale) {
-      window.localStorage.setItem(storageKey, initialLocale);
-    }
-
-    return initialLocale;
-  });
+  const [locale, setLocale] = useState<Locale>(defaultLocale);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    try {
+      const storedLocale = window.localStorage.getItem(storageKey);
+      if (isLocale(storedLocale)) {
+        setLocale(storedLocale);
+      }
+    } catch {
+      // ignore
+    }
+
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) {
+      return;
+    }
+
     window.localStorage.setItem(storageKey, locale);
     document.documentElement.lang = locale;
-  }, [locale]);
+  }, [hydrated, locale]);
 
   return (
     <LocaleContext.Provider value={{ locale, setLocale }}>

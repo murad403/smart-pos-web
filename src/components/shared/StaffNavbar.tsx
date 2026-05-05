@@ -1,8 +1,7 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, Menu, RefreshCw, LogOut, ChefHat, PackageSearch } from "lucide-react";
+import { ShoppingCart, RefreshCw, LogOut, ChefHat, PackageSearch } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import useLocalLanguage from "@/hooks/useLocalLanguage";
 
@@ -40,7 +39,7 @@ const StaffNavbar = () => {
                             }`}
                     >
                         <ChefHat size={15} />
-                        <span>production</span>
+                        <span>{t.production}</span>
                     </Link>
                     <Link
                         href="/staff/collection"
@@ -50,7 +49,7 @@ const StaffNavbar = () => {
                             }`}
                     >
                         <PackageSearch size={15} />
-                        <span>collection</span>
+                        <span>{t.collection}</span>
                     </Link>
                     <Link
                         href="/staff/order-life-cycle"

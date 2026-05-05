@@ -6,16 +6,21 @@ import { UI_MESSAGES, mapStoredLocaleToUILang, UILang } from "@/lib/messages";
 const STORAGE_KEY = "smart-pos-locale"; // used by MainWrapper
 
 export default function useLocalLanguage() {
-  const [language, setLanguageState] = useState<UILang>(() => {
-    try {
-      const stored = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
-      return mapStoredLocaleToUILang(stored);
-    } catch {
-      return "EN";
-    }
-  });
+  const [language, setLanguageState] = useState<UILang>("EN");
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        setLanguageState(mapStoredLocaleToUILang(stored));
+      }
+    } catch {
+      // ignore
+    }
+
+    setHydrated(true);
+
     const onStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY) {
         setLanguageState(mapStoredLocaleToUILang(e.newValue));
@@ -34,6 +39,18 @@ export default function useLocalLanguage() {
       window.removeEventListener("languagechange", onCustom as EventListener);
     };
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) {
+      return;
+    }
+
+    try {
+      window.localStorage.setItem(STORAGE_KEY, language === "ID" ? "id" : "en");
+    } catch {
+      // ignore
+    }
+  }, [hydrated, language]);
 
   const setLanguage = (uiLang: UILang) => {
     // write stored locale as 'en' or 'id' to match MainWrapper

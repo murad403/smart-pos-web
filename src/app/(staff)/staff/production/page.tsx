@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Bell, X, Clock } from "lucide-react";
+import { Bell, Clock } from "lucide-react";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 type StaffRole = "kitchen" | "bar";
 type OrderStatus = "new" | "processing" | "completed";
@@ -24,6 +25,7 @@ interface Order {
 }
 
 const ProductionPage = () => {
+  const { t } = useLocalLanguage();
   const [staffRole, setStaffRole] = useState<StaffRole>("kitchen");
   const [orderStatus, setOrderStatus] = useState<OrderStatus>("new");
 
@@ -100,11 +102,11 @@ const ProductionPage = () => {
   const getStatusBadgeLabel = (status: OrderStatus) => {
     switch (status) {
       case "new":
-        return "NEW ORDER";
+        return t.newOrder;
       case "processing":
-        return "Processing";
+        return t.processing;
       case "completed":
-        return "COMPLETED";
+        return t.completed;
       default:
         return status;
     }
@@ -114,10 +116,10 @@ const ProductionPage = () => {
     <div className="min-h-screen max-w-7xl mx-auto p-4 sm:p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Production</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.production}</h1>
         <div className="flex items-center gap-3">
           <button className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
-            <span>System Last</span>
+            <span>{t.systemLive}</span>
             <span className="bg-green-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">2</span>
           </button>
           <button className="p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
@@ -138,7 +140,7 @@ const ProductionPage = () => {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            {role === "kitchen" ? "Kitchen Staff" : "Bar Staff"}
+            {role === "kitchen" ? t.kitchenStaff : t.barStaff}
           </button>
         ))}
       </div>
@@ -155,7 +157,7 @@ const ProductionPage = () => {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            {status === "new" ? "New order" : status === "processing" ? "Processing" : "Completed"}
+            {status === "new" ? t.newOrder : status === "processing" ? t.processing : t.completed}
           </button>
         ))}
       </div>
@@ -180,7 +182,7 @@ const ProductionPage = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="font-bold text-gray-900">
-                      ORDER #{order.orderNumber} — {order.time}
+                      {t.order} #{order.orderNumber} — {order.time}
                     </span>
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeColor(order.status)}`}>
                       {getStatusBadgeLabel(order.status)}
@@ -211,31 +213,31 @@ const ProductionPage = () => {
                   <div key={item.id} className="flex items-center justify-between text-sm">
                     <div>
                       <span className="font-medium text-gray-900">{item.name}</span>
-                      <span className="text-gray-600 ml-2">Qty: {item.qty}</span>
+                      <span className="text-gray-600 ml-2">{t.qty}: {item.qty}</span>
                     </div>
                     {order.status === "new" && (
                       <div className="flex gap-2">
                         <button className="px-3 cursor-pointer py-2 bg-gray-300 text-gray-600 rounded font-medium text-xs hover:bg-gray-400 transition-colors">
-                          CANCEL
+                          {t.cancel}
                         </button>
                         <button className="px-3 py-2 cursor-pointer bg-red-600 text-white rounded font-medium text-xs hover:bg-red-700 transition-colors">
-                          PICKUP
+                          {t.pickup}
                         </button>
                       </div>
                     )}
                     {order.status === "processing" && (
                       <div className="flex gap-2">
                         <button className="px-3 cursor-pointer py-2 bg-gray-300 text-gray-600 rounded font-medium text-xs hover:bg-gray-400 transition-colors">
-                          CANCEL
+                          {t.cancel}
                         </button>
                         <button className="px-3 py-2 cursor-pointer bg-blue-600 text-white rounded font-medium text-xs hover:bg-blue-700 transition-colors">
-                          READY
+                          {t.ready}
                         </button>
                       </div>
                     )}
                     {order.status === "completed" && (
                       <button className="px-3 py-2 cursor-pointer bg-green-200 text-green-800 rounded font-medium text-xs hover:bg-green-300 transition-colors">
-                        Remind
+                        {t.remind}
                       </button>
                     )}
                   </div>
