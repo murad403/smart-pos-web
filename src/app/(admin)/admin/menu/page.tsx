@@ -1,10 +1,11 @@
 import MenuSection from '@/components/shared/MenuSection'
-import React from 'react'
+
+
 
 const page = () => {
-  return (
-    <MenuSection />
-  )
+    return (
+        <MenuSection />
+    )
 }
 
 export default page
