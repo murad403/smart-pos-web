@@ -13,73 +13,104 @@ const StaffNavbar = () => {
     const isCollectionActive = pathname?.includes("/staff/collection");
     const isOrderLifeActive = pathname?.includes("/staff/order-life-cycle");
 
+    const navLinks = [
+        {
+            href: "/staff/production",
+            isActive: isMenuActive,
+            icon: <ChefHat size={15} />,
+            label: t.production,
+            shortLabel: t.production,
+        },
+        {
+            href: "/staff/collection",
+            isActive: isCollectionActive,
+            icon: <PackageSearch size={15} />,
+            label: t.collection,
+            shortLabel: t.collection,
+        },
+        {
+            href: "/staff/order-life-cycle",
+            isActive: isOrderLifeActive,
+            icon: <RefreshCw size={15} />,
+            label: t.orderLifeCycle,
+            shortLabel: "Lifecycle",
+        },
+    ];
+
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-            <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between gap-2">
+        <>
+            {/* Top bar */}
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+                <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between gap-2">
 
-                {/* Logo */}
-                <Link
-                    href="/staff/"
-                    className="flex items-center gap-2 font-bold text-gray-900 shrink-0"
-                >
-                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
-                        <ShoppingCart size={16} className="text-white" />
-                    </div>
-                    {/* Only show brand name on md+ */}
-                    <span className="hidden md:block text-sm font-bold">SmartPOS Restaurant</span>
-                </Link>
-
-                {/* Center Nav */}
-                <div className="flex items-center gap-1">
+                    {/* Logo */}
                     <Link
                         href="/staff/production"
-                        className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${isMenuActive
-                                ? "bg-blue-600 text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`}
+                        className="flex items-center gap-2 font-bold text-gray-900 shrink-0"
                     >
-                        <ChefHat size={15} />
-                        <span>{t.production}</span>
+                        <div className="size-9 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
+                            <ShoppingCart size={17} className="text-white" />
+                        </div>
+                        <span className="hidden md:block text-sm md:text-base font-semibold">
+                            SmartPOS Restaurant
+                        </span>
                     </Link>
-                    <Link
-                        href="/staff/collection"
-                        className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${isCollectionActive
-                                ? "bg-blue-600 text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`}
-                    >
-                        <PackageSearch size={15} />
-                        <span>{t.collection}</span>
-                    </Link>
-                    <Link
-                        href="/staff/order-life-cycle"
-                        className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${isOrderLifeActive
-                                ? "bg-blue-600 text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`}
-                    >
-                        <RefreshCw size={15} />
-                        {/* Full label on sm+, abbreviated on mobile */}
-                        <span className="hidden sm:inline">{t.orderLifeCycle}</span>
-                        <span className="sm:hidden">Lifecycle</span>
-                    </Link>
-                </div>
 
-                {/* Right Side */}
-                <div className="flex items-center gap-2 shrink-0">
-                    <LanguageSwitcher />
-                    <Link
-                        href="/auth/sign-in"
-                        className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-md border border-red-100 text-xs sm:text-sm font-medium text-red-500 hover:bg-red-100 transition-all bg-[#FEF2F2] whitespace-nowrap"
-                    >
-                        <LogOut size={13} className="shrink-0" />
-                        {/* Show text on sm+, icon-only on mobile */}
-                        <span className="hidden sm:inline">{t.logout}</span>
-                    </Link>
-                </div>
+                    {/* Center Nav — hidden on mobile, shown on sm+ */}
+                    <div className="hidden sm:flex items-center gap-1">
+                        {navLinks.map(({ href, isActive, icon, label }) => (
+                            <Link
+                                key={href}
+                                href={href}
+                                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${isActive
+                                        ? "bg-blue-600 text-white"
+                                        : "text-gray-600 hover:bg-gray-100"
+                                    }`}
+                            >
+                                {icon}
+                                <span>{label}</span>
+                            </Link>
+                        ))}
+                    </div>
 
-            </div>
-        </nav>
+                    {/* Right Side */}
+                    <div className="flex items-center gap-2 shrink-0">
+                        <LanguageSwitcher />
+                        <Link
+                            href="/auth/sign-in"
+                            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-md border border-red-100 text-xs sm:text-sm font-medium text-red-500 hover:bg-red-100 transition-all bg-[#FEF2F2] whitespace-nowrap"
+                        >
+                            <LogOut size={13} className="shrink-0" />
+                            <span className="hidden sm:inline">{t.logout}</span>
+                        </Link>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Bottom Nav — mobile only */}
+            <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.06)]">
+                <div className="flex items-center justify-around px-2 py-2">
+                    {navLinks.map(({ href, isActive, icon, shortLabel }) => (
+                        <Link
+                            key={href}
+                            href={href}
+                            className={`flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-[11px] font-medium transition-all ${isActive
+                                    ? "text-blue-600"
+                                    : "text-gray-500 hover:text-gray-800"
+                                }`}
+                        >
+                            <span
+                                className={`p-1.5 rounded-lg transition-all ${isActive ? "bg-blue-50" : ""
+                                    }`}
+                            >
+                                {icon}
+                            </span>
+                            <span>{shortLabel}</span>
+                        </Link>
+                    ))}
+                </div>
+            </nav>
+        </>
     );
 };
 
