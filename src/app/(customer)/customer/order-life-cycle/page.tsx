@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Volume2, VolumeX, ArrowRight } from "lucide-react";
+import { Volume2, VolumeX, ArrowRight, ArrowDown } from "lucide-react";
 import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 const OrderLifeCycle = () => {
@@ -57,25 +57,41 @@ const OrderLifeCycle = () => {
 
         {/* Lifecycle Steps */}
         <div className="p-6 mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-6">{t.orderLifecycle}</h2>
+          <h2 className="text-lg md:text-xl font-bold text-text-color mb-6">{t.orderLifecycle}</h2>
 
-          <div className="flex items-start justify-center gap-2 flex-wrap sm:flex-nowrap">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-center gap-4 sm:gap-2">
             {steps.map((step, idx) => (
               <React.Fragment key={idx}>
-                <div className="flex flex-col items-center gap-2 flex-1 min-w-20">
+                <div className="flex sm:flex-col items-start sm:items-center gap-3 sm:gap-2 sm:flex-1 w-full sm:min-w-20">
                   <button
-                    className={`px-4 py-3 rounded-lg font-semibold text-sm ${step.color} ${step.textColor} flex items-center w-full justify-center`}
+                    className={`w-20 sm:w-full px-3 sm:px-4 py-3 rounded-lg font-semibold text-xs sm:text-sm ${step.color} ${step.textColor} flex items-center justify-center gap-1 shrink-0 whitespace-nowrap`}
                   >
                     {step.hasIcon && <span>🚫</span>}
                     {step.label}
                   </button>
-                  <p className="text-sm text-text-color font-semibold text-center">{step.subLabel}</p>
-                  <p className="text-xs text-text-color text-center">{step.desc}</p>
-                </div>
-                {idx < steps.length - 1 && (
-                  <div className="flex items-start pt-3">
-                    <ArrowRight size={19} className="text-gray-400 shrink-0" />
+
+                  <div className="flex-1 text-left sm:text-center">
+                    <p className="text-sm md:text-base text-text-color font-semibold">
+                      {step.subLabel}
+                    </p>
+                    <p className="text-xs md:text-sm text-text-color max-w-full sm:max-w-35">
+                      {step.desc}
+                    </p>
                   </div>
+                </div>
+
+                {idx < steps.length - 1 && (
+                  <>
+                    {/* 👉 Mobile Arrow (Down) */}
+                    <div className="flex justify-center sm:hidden">
+                      <ArrowDown size={18} className="text-gray-400" />
+                    </div>
+
+                    {/* 👉 Desktop Arrow (Right) */}
+                    <div className="hidden sm:flex items-start pt-3">
+                      <ArrowRight size={19} className="text-gray-400 shrink-0" />
+                    </div>
+                  </>
                 )}
               </React.Fragment>
             ))}

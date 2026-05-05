@@ -58,7 +58,7 @@ const Welcome = () => {
 
                         {/* Customer */}
                         <Link
-                            href="/auth/sign-in"
+                            href="/customer/customer-welcome"
                             aria-label={t("customerAria")}
                             className="flex w-full items-center gap-2.5 rounded-xl bg-[#f5a623] px-3.5 py-4 text-[13px] font-semibold text-white transition-all duration-150 hover:-translate-y-0.5 hover:saturate-[1.1] active:scale-[0.98]"
                         >
