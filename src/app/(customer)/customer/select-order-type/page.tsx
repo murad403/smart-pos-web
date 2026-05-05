@@ -15,7 +15,7 @@ const SelectOrderType = () => {
   };
 
   return (
-    <div className="relative w-full h-[calc(100vh-3.5rem)] overflow-hidden">
+    <div className="relative w-full min-h-screen flex justify-center items-center overflow-hidden">
       <Image
         src={banner}
         alt="Restaurant banner"

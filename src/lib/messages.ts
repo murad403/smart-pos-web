@@ -17,7 +17,7 @@ export const UI_MESSAGES = {
     yourName: "Your name",
     back: "Back",
     payAtCounter: "Pay at counter",
-    welcome: "Welcome",
+    welcome: "Welcome To",
     startOrder: "Start Order",
     all: "All",
     starters: "Starters",

@@ -1,26 +1,22 @@
 "use client";
-import React from "react";
 import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useLocalLanguage();
 
   return (
-    <div className="flex items-center gap-1 text-sm font-semibold">
+    <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-white p-1 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.55)]">
       <button
         onClick={() => setLanguage("EN")}
-        className={`px-1 py-0.5 transition-colors ${
-          language === "EN" ? "text-gray-900 font-bold" : "text-gray-400 hover:text-gray-600"
-        }`}
+        className={`min-w-11 rounded-xl px-3 py-1.5 text-sm font-semibold tracking-wide transition-all duration-200 ${language === "EN" ? "bg-[#2f6de3] text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
+          }`}
       >
         EN
       </button>
-      <span className="text-gray-300">|</span>
       <button
         onClick={() => setLanguage("ID")}
-        className={`px-1 py-0.5 transition-colors ${
-          language === "ID" ? "text-gray-900 font-bold" : "text-gray-400 hover:text-gray-600"
-        }`}
+        className={`min-w-11 rounded-xl px-3 py-1.5 text-sm font-semibold tracking-wide transition-all duration-200 ${language === "ID" ? "bg-[#2f6de3] text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
+          }`}
       >
         ID
       </button>

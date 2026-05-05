@@ -30,9 +30,8 @@ const MenuCard = ({ item, isSelected, onSelect }: MenuCardProps) => {
   return (
     <div
       onClick={() => onSelect?.(item)}
-      className={`relative bg-white rounded-xl overflow-hidden shadow-sm border-2 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 ${
-        isSelected ? "border-blue-500" : "border-transparent"
-      }`}
+      className={`relative bg-white rounded-xl overflow-hidden shadow-sm border-2 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 ${isSelected ? "border-blue-500" : "border-transparent"
+        }`}
     >
       {/* Badges */}
       <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
@@ -51,7 +50,7 @@ const MenuCard = ({ item, isSelected, onSelect }: MenuCardProps) => {
       </div>
 
       {/* Image */}
-      <div className="relative w-full h-36 sm:h-40 bg-gray-100">
+      <div className="relative w-full h-36 sm:h-50 bg-gray-100">
         <Image
           src={item.image}
           alt={item.name}
@@ -62,19 +61,19 @@ const MenuCard = ({ item, isSelected, onSelect }: MenuCardProps) => {
 
       {/* Info */}
       <div className="p-2.5">
-        <p className="text-[11px] text-red-500 font-semibold">Item # {item.itemNumber}</p>
+        <p className="text-[12px] text-red-500 font-semibold">Item # {item.itemNumber}</p>
         <div className="flex items-center justify-between gap-1 mt-0.5">
-          <p className="text-red-500 font-bold text-sm leading-tight truncate">{item.name}</p>
-          <p className="text-gray-900 font-semibold text-sm whitespace-nowrap">
+          <p className="text-red-500 font-bold text-sm md:text-base leading-tight truncate">{item.name}</p>
+          <p className="text-gray-900 font-semibold text-sm md:text-base whitespace-nowrap">
             Rp{item.price.toLocaleString("id-ID")}
           </p>
         </div>
-        <p className="text-[11px] text-gray-500 mt-1">
+        <div className="text-[12px] text-gray-500 mt-1 flex justify-between">
           {t.inventory}: {item.inventory} &nbsp; {t.stock}: {item.stock}
-        </p>
-        <p className="text-[11px] text-gray-500">{item.status}</p>
+          <p className="text-[12px] text-gray-500">{item.status}</p>
+        </div>
         {item.promoPrice && (
-          <p className="text-[11px] text-gray-500 mt-0.5">
+          <p className="text-[12px] font-bold text-text-color mt-0.5">
             {t.promoPrice}: Rp{item.promoPrice.toLocaleString("id-ID")}
           </p>
         )}

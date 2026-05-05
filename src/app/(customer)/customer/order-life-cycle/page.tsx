@@ -50,13 +50,13 @@ const OrderLifeCycle = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-screen-lg mx-auto px-4 py-8">
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-gray-900">{t.orderLifeCycle}</h1>
         <p className="text-sm text-gray-500 mb-6">{t.activeOrders}</p>
 
         {/* Lifecycle Steps */}
-        <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
+        <div className="p-6 mb-6">
           <h2 className="text-lg font-bold text-gray-900 mb-6">{t.orderLifecycle}</h2>
 
           <div className="flex items-start justify-center gap-2 flex-wrap sm:flex-nowrap">
@@ -64,17 +64,17 @@ const OrderLifeCycle = () => {
               <React.Fragment key={idx}>
                 <div className="flex flex-col items-center gap-2 flex-1 min-w-20">
                   <button
-                    className={`px-4 py-2 rounded-lg font-semibold text-sm ${step.color} ${step.textColor} flex items-center gap-1.5 w-full justify-center`}
+                    className={`px-4 py-3 rounded-lg font-semibold text-sm ${step.color} ${step.textColor} flex items-center w-full justify-center`}
                   >
                     {step.hasIcon && <span>🚫</span>}
                     {step.label}
                   </button>
-                  <p className="text-xs text-gray-600 font-medium text-center">{step.subLabel}</p>
-                  <p className="text-xs text-gray-400 text-center leading-relaxed">{step.desc}</p>
+                  <p className="text-sm text-text-color font-semibold text-center">{step.subLabel}</p>
+                  <p className="text-xs text-text-color text-center">{step.desc}</p>
                 </div>
                 {idx < steps.length - 1 && (
-                  <div className="flex items-start pt-2.5">
-                    <ArrowRight size={18} className="text-gray-400 shrink-0" />
+                  <div className="flex items-start pt-3">
+                    <ArrowRight size={19} className="text-gray-400 shrink-0" />
                   </div>
                 )}
               </React.Fragment>

@@ -1,14 +1,8 @@
 "use client";
-
 import { createContext, useContext, useEffect, useState } from "react";
-import { Globe } from "lucide-react";
 import { NextIntlClientProvider } from "next-intl";
-import {
-  defaultLocale,
-  getLocaleMessages,
-  locales,
-  type Locale,
-} from "@/lib/i18n";
+import { defaultLocale, getLocaleMessages, locales, type Locale } from "@/lib/i18n";
+import { usePathname } from "next/navigation";
 
 const storageKey = "smart-pos-locale";
 
@@ -38,14 +32,22 @@ const MainWrapper = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const pathName = usePathname();
   const [locale, setLocale] = useState<Locale>(() => {
     if (typeof window === "undefined") {
       return defaultLocale;
     }
+    
 
     const storedLocale = window.localStorage.getItem(storageKey);
+    const initialLocale = isLocale(storedLocale) ? storedLocale : defaultLocale;
 
-    return isLocale(storedLocale) ? storedLocale : defaultLocale;
+    // Ensure English is always set on initial load if nothing stored
+    if (!storedLocale) {
+      window.localStorage.setItem(storageKey, initialLocale);
+    }
+
+    return initialLocale;
   });
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const MainWrapper = ({
       <NextIntlClientProvider locale={locale} messages={getLocaleMessages(locale)}>
         <div className="relative min-h-screen">
           <div className="absolute left-5 top-5 z-50">
-            <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-white p-1 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.55)]">
+            <div className={` ${pathName.includes("/auth") ? "inline-flex" : "hidden"} items-center rounded-2xl border border-slate-200 bg-white p-1 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.55)]`}>
               {locales.map((option) => (
                 <button
                   key={option}

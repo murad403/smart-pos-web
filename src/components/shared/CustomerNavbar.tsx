@@ -15,9 +15,9 @@ const CustomerNavbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/customer" className="flex items-center gap-2 font-bold text-gray-900 text-base">
+        <Link href="/customer/customer-welcome" className="flex items-center gap-2 font-bold text-gray-900 text-base">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <ShoppingCart size={16} className="text-white" />
           </div>
@@ -38,7 +38,7 @@ const CustomerNavbar = () => {
             <span>{t.menu}</span>
           </Link>
           <Link
-            href="/customer/order-lifecycle"
+            href="/customer/order-life-cycle"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
               isOrderLifeActive
                 ? "bg-blue-600 text-white"
@@ -55,8 +55,8 @@ const CustomerNavbar = () => {
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
           <Link
-            href="/login"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+            href="/auth/sign-in"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-gray-200 text-sm md:text-base font-medium text-red-500 hover:bg-gray-50 transition-all bg-[#FEF2F2] "
           >
             <LogOut size={14} />
             <span>{t.logout}</span>

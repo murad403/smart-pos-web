@@ -115,16 +115,7 @@ const Menu = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Table indicator */}
-      {tableId && (
-        <div className="bg-white border-b px-4 py-2 flex items-center justify-end gap-2">
-          <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
-            Table {tableId}
-          </span>
-          <span className="text-gray-600 text-sm font-medium">Table {tableId}</span>
-        </div>
-      )}
+    <div className="min-h-screen">
 
       <div className="max-w-7xl mx-auto px-4 py-4">
         {/* Search */}
@@ -145,35 +136,36 @@ const Menu = () => {
             <button
               key={cat}
               onClick={() => handleCategoryChange(cat)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${
-                category === cat
+              className={`px-4 py-1.5 rounded-xl text-sm font-medium transition-all border ${category === cat
                   ? "bg-blue-600 text-white border-blue-600"
                   : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-              }`}
+                }`}
             >
               {catLabel(cat)}
             </button>
           ))}
         </div>
 
-        {/* Menu Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
-          {paginated.map((item) => (
-            <MenuCard
-              key={item.id}
-              item={item}
-              isSelected={!!selectedItems.find((s) => s.id === item.id)}
-              onSelect={handleSelect}
-            />
-          ))}
-        </div>
+        <div>
+          {/* Menu Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-4">
+            {paginated.map((item) => (
+              <MenuCard
+                key={item.id}
+                item={item}
+                isSelected={!!selectedItems.find((s) => s.id === item.id)}
+                onSelect={handleSelect}
+              />
+            ))}
+          </div>
 
-        {/* Pagination */}
-        <CustomPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+          {/* Pagination */}
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
 
       {/* Bottom bar */}

@@ -1,18 +1,24 @@
 "use client";
 import CustomerNavbar from "@/components/shared/CustomerNavbar";
+import { usePathname } from "next/navigation";
 import React from "react";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const CustomerLayout = ({ children }: { children: React.ReactNode }) => {
+  const pathName = usePathname();
+  const isVisible = pathName.includes("/customer-welcome") || pathName.includes("/customer/select-order-type");
+  // console.log(isVisible);
   return (
     <section>
       {/* Customer Navbar */}
-      <CustomerNavbar />
+      {
+        !isVisible && <CustomerNavbar />
+      }
 
-      <div className="pt-14">
+      <div className={`${isVisible ? "pt-0 pb-0" : "pt-18 pb-12 md:pb-0"} bg-[#F7F7F7]`}>
         {children}
       </div>
     </section>
   );
 };
 
-export default layout;
+export default CustomerLayout;

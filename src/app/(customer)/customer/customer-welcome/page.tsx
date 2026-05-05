@@ -10,7 +10,7 @@ const CustomerWelcome = () => {
   const { t } = useLocalLanguage();
 
   return (
-    <div className="relative w-full h-[calc(100vh-3.5rem)] overflow-hidden">
+    <div className="relative w-full min-h-screen flex justify-center items-center overflow-hidden">
       {/* Background Image */}
       <Image
         src={banner}
@@ -24,15 +24,15 @@ const CustomerWelcome = () => {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-2">
           {t.welcome}
         </h1>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-400 mb-8">
+        <h2 className="text-3xl sm:text-4xl font-semibold text-yellow-500 mb-8">
           SmartPOS Restaurant
         </h2>
         <Link
           href="/customer/select-order-type"
-          className="flex items-center gap-2 bg-white text-gray-900 font-semibold px-6 py-3 rounded-full hover:bg-gray-100 transition-all shadow-lg text-sm sm:text-base"
+          className="flex items-center gap-2 bg-white text-gray-900 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-all shadow-lg text-sm sm:text-base"
         >
           <UtensilsCrossed size={18} />
           {t.startOrder}
