@@ -14,7 +14,7 @@ const CustomerLayout = ({ children }: { children: React.ReactNode }) => {
         !isVisible && <CustomerNavbar />
       }
 
-      <div className={`${isVisible ? "pt-0 pb-0" : "pt-18 pb-12 md:pb-0"} bg-[#F7F7F7]`}>
+      <div className={`${isVisible ? "pt-0 pb-0" : "pt-18 pb-12 md:pb-0"} bg-red-100`}>
         {children}
       </div>
     </section>
