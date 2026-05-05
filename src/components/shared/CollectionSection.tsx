@@ -219,9 +219,6 @@ const CollectionSection = () => {
                                                 <button className="px-3 py-2 cursor-pointer bg-gray-300 text-gray-600 rounded font-medium text-xs hover:bg-gray-400 transition-colors">
                                                     {t.cancel}
                                                 </button>
-                                                <button className="px-3 py-2 cursor-pointer bg-blue-600 text-white rounded font-medium text-xs hover:bg-blue-700 transition-colors">
-                                                    {t.pickup}
-                                                </button>
                                             </div>
                                         )}
                                         {order.status === "accepted" && (

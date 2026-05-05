@@ -15,3 +15,12 @@ export const createSignInSchema = (
   });
 
 export type SignInFormValues = z.infer<ReturnType<typeof createSignInSchema>>;
+
+
+export const paymentSchema = z.object({
+  paymentMethod: z.enum(["cash", "transfer", "card"]),
+  amountReceived: z.number().min(0),
+  printer: z.string().optional(),
+});
+
+export type FormValues = z.infer<typeof paymentSchema>;

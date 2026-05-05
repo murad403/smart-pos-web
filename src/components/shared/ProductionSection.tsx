@@ -118,11 +118,11 @@ const ProductionSection = () => {
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.production}</h1>
                 <div className="flex items-center gap-3">
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
+                    <button className="bg-[#00C95033] text-[#05DF72] px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
                         <span>{t.systemLive}</span>
-                        <span className="bg-green-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">2</span>
+                        <span className="rounded-full w-6 h-6 flex items-center justify-center text-xs">2</span>
                     </button>
-                    <button className="p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
+                    <button className="p-2 bg-[#F0B100] rounded-lg shadow-sm hover:shadow-md transition-shadow text-black">
                         <Bell size={20} className="text-gray-600" />
                     </button>
                 </div>
