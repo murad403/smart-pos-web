@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Printer } from "lucide-react";
 import { QRCodeFormValues, qrCodeSchema } from "@/validation/settings.validation";
+import Image from "next/image";
 
 type Props = {
   open: boolean;
@@ -160,7 +162,7 @@ const QRCodeGeneratorModal: React.FC<Props> = ({ open, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[420px] p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-105 p-6 sm:p-8">
         {/* Title */}
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
           QR Code Generator
@@ -194,14 +196,16 @@ const QRCodeGeneratorModal: React.FC<Props> = ({ open, onClose }) => {
             className="bg-[#FFFDE8] rounded-2xl p-6 flex flex-col items-center justify-center mx-auto"
           >
             {qrSrc ? (
-              <img
+              <Image
                 src={qrSrc}
                 alt="QR Code"
-                className="w-[200px] h-[200px]"
+                width={200}
+                height={200}
+                className="w-50 h-50"
                 style={{ imageRendering: "pixelated" }}
               />
             ) : (
-              <div className="w-[200px] h-[200px] bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+              <div className="w-50 h-50 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm">
                 Enter table number
               </div>
             )}

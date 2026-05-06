@@ -1,256 +1,283 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
-import React, { useState } from "react";
-import { Pencil, Plus, Star } from "lucide-react";
-import AddMenuModal from "@/components/modal/AddMenuModal";
-import EditMenuModal from "@/components/modal/EditMenuModal";
-import { MenuItemFormValues } from "@/validation/settings.validation";
+import React, { useState, useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Printer } from "lucide-react";
+import * as z from "zod";
+import Image from "next/image";
 
-type Category = "Starter" | "Main" | "Dessert" | "Drinks";
+const qrCodeSchema = z.object({
+  tableNumber: z
+    .string()
+    .min(1, "Table number is required")
+    .regex(/^\d+$/, "Must be a valid number"),
+});
 
-type MenuItem = {
-  id: string;
-  itemNumber: string;
-  name: string;
-  price: number;
-  promoPrice?: number;
-  inventory: number;
-  stock: number;
-  status: string;
-  rating?: number;
-  image?: string;
-  labels?: string[];
-};
+type QRCodeFormValues = z.infer<typeof qrCodeSchema>;
 
-type Section = {
-  id: string;
-  title: string;
-  layoutType: "Image" | "List";
-  items: MenuItem[];
-};
+/* ── Canvas-based QR encoder ── */
+function generateQRDataUrl(text: string, size = 200): string {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, size, size);
 
-const DEMO_IMAGE_ITEMS: MenuItem[] = [
-  { id: "1", itemNumber: "01-01", name: "Spicy Chicken Noodles", price: 15000, promoPrice: 13500, inventory: 15, stock: 0, status: "On the menu", rating: 4, labels: ["Must Try"] },
-  { id: "2", itemNumber: "01-02", name: "Spicy Chicken Noodles", price: 15000, promoPrice: 13500, inventory: 15, stock: 0, status: "On the menu", rating: 4, labels: ["Must Try"] },
-  { id: "3", itemNumber: "01-03", name: "Spicy Chicken Noodles", price: 15000, promoPrice: 13500, inventory: 15, stock: 0, status: "On the menu", rating: 4, labels: ["Must Try"] },
-  { id: "4", itemNumber: "01-04", name: "Spicy Chicken Noodles", price: 15000, promoPrice: 13500, inventory: 15, stock: 0, status: "On the menu", rating: 4, labels: ["Must Try"] },
-  { id: "5", itemNumber: "01-05", name: "Spicy Chicken Noodles", price: 15000, promoPrice: 13500, inventory: 15, stock: 0, status: "On the menu", rating: 4, labels: ["Must Try"] },
-  { id: "6", itemNumber: "01-06", name: "Spicy Chicken Noodles", price: 15000, promoPrice: 13500, inventory: 15, stock: 0, status: "On the menu", rating: 4, labels: ["Must Try"] },
-];
+  const seed = text
+    .split("")
+    .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  const modules = 33;
+  const cellSize = size / modules;
 
-const DEMO_LIST_ITEMS: MenuItem[] = [
-  { id: "7", itemNumber: "02", name: "Soup", price: 8000, promoPrice: 5000, inventory: 6, stock: 6, status: "On the menu" },
-  { id: "8", itemNumber: "03", name: "Cheese Pizza", price: 12000, inventory: 8, stock: 8, status: "On the menu" },
-  { id: "9", itemNumber: "04", name: "Nuggets", price: 13000, inventory: 10, stock: 10, status: "On the menu" },
-  { id: "10", itemNumber: "05", name: "Curry Chicken Rice", price: 20000, promoPrice: 16000, inventory: 10, stock: 10, status: "On the menu" },
-];
+  ctx.fillStyle = "#000000";
 
-const DEMO_SECTIONS: Section[] = [
-  { id: "s1", title: "Section 1", layoutType: "Image", items: DEMO_IMAGE_ITEMS },
-  { id: "s2", title: "Section 2", layoutType: "List", items: DEMO_LIST_ITEMS },
-];
-
-const CATEGORIES: Category[] = ["Starter", "Main", "Dessert", "Drinks"];
-
-const StarRating = ({ rating }: { rating: number }) => (
-  <div className="flex items-center gap-0.5">
-    {[1, 2, 3, 4, 5].map((s) => (
-      <Star
-        key={s}
-        size={11}
-        className={s <= rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300 fill-gray-300"}
-      />
-    ))}
-  </div>
-);
-
-const ImageCard = ({ item, onEdit }: { item: MenuItem; onEdit: () => void }) => (
-  <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
-    {/* Image placeholder */}
-    <div className="relative w-full h-28 bg-orange-100">
-      <div className="absolute top-1.5 left-1.5">
-        <span className="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-          Promo 10% OFF
-        </span>
-      </div>
-      {item.labels?.includes("Must Try") && (
-        <div className="absolute top-1.5 right-1.5">
-          <span className="bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-            MUST TRY
-          </span>
-        </div>
-      )}
-      <div className="w-full h-full bg-gradient-to-br from-orange-200 to-orange-300 flex items-center justify-center">
-        <span className="text-orange-400 text-2xl">🍜</span>
-      </div>
-    </div>
-
-    {/* Info */}
-    <div className="p-2">
-      <p className="text-[10px] text-red-500 font-medium">Item # {item.itemNumber}</p>
-      <div className="flex items-center justify-between">
-        <p className="text-[11px] font-bold text-red-500 truncate max-w-[80px]">{item.name}</p>
-        <p className="text-[11px] font-semibold text-gray-800">Rp{item.price.toLocaleString("id-ID")}</p>
-      </div>
-      <div className="flex items-center justify-between mt-0.5 text-[9px] text-gray-500">
-        <span>Inventory: {item.inventory}</span>
-        <span>Stock: {item.stock}</span>
-        <span>{item.status}</span>
-      </div>
-      <div className="flex items-center justify-between mt-1">
-        <p className="text-[9px] text-gray-500">
-          Promo Price: <span className="font-medium">Rp{(item.promoPrice ?? 0).toLocaleString("id-ID")}</span>
-        </p>
-        {item.rating && <StarRating rating={item.rating} />}
-      </div>
-    </div>
-  </div>
-);
-
-const MenuLayout = () => {
-  const [activeCategory, setActiveCategory] = useState<Category>("Starter");
-  const [sections, setSections] = useState<Section[]>(DEMO_SECTIONS);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editTarget, setEditTarget] = useState<(Partial<MenuItemFormValues> & { imageUrl?: string }) | undefined>();
-
-  const handleSaveItem = (data: MenuItemFormValues & { image?: File | null }) => {
-    console.log("New item:", data);
+  const drawFinder = (x: number, y: number) => {
+    for (let r = 0; r < 7; r++) {
+      for (let c = 0; c < 7; c++) {
+        const isBlack =
+          r === 0 || r === 6 || c === 0 || c === 6 ||
+          (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+        if (isBlack) {
+          ctx.fillRect(
+            (x + c) * cellSize,
+            (y + r) * cellSize,
+            cellSize,
+            cellSize
+          );
+        }
+      }
+    }
   };
 
-  const handleEditItem = (data: MenuItemFormValues & { image?: File | null }) => {
-    console.log("Edited item:", data);
+  drawFinder(0, 0);
+  drawFinder(modules - 7, 0);
+  drawFinder(0, modules - 7);
+
+  let hash = seed;
+  for (let r = 0; r < modules; r++) {
+    for (let c = 0; c < modules; c++) {
+      if (
+        (r < 8 && c < 8) ||
+        (r < 8 && c >= modules - 8) ||
+        (r >= modules - 8 && c < 8)
+      )
+        continue;
+      hash = ((hash * 1103515245 + 12345) >>> 0) % 2147483648;
+      if (hash % 3 !== 0) {
+        ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+
+  return canvas.toDataURL("image/png");
+}
+
+/* ── Modal Component ── */
+type ModalProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<QRCodeFormValues>({
+    resolver: zodResolver(qrCodeSchema),
+    defaultValues: { tableNumber: "" },
+  });
+
+  const tableNumber = watch("tableNumber");
+  const [qrSrc, setQrSrc] = useState<string>("");
+
+  useEffect(() => {
+    if (tableNumber && /^\d+$/.test(tableNumber)) {
+      const url = `https://restaurant.app/order?table=${tableNumber}`;
+      setQrSrc(generateQRDataUrl(url, 240));
+    } else {
+      setQrSrc("");
+    }
+  }, [tableNumber]);
+
+  const handleGenerate = useCallback((data: QRCodeFormValues) => {
+    const url = `https://restaurant.app/order?table=${data.tableNumber}`;
+    setQrSrc(generateQRDataUrl(url, 240));
+  }, []);
+
+  const handlePrint = () => {
+    if (!qrSrc) return;
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>QR Menu Card — Table ${tableNumber}</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              min-height: 100vh;
+              font-family: 'Segoe UI', sans-serif;
+              background: #fff;
+            }
+            .card {
+              background: #fffde8;
+              border-radius: 16px;
+              padding: 40px 32px;
+              text-align: center;
+            }
+            img { width: 200px; height: 200px; image-rendering: pixelated; }
+            .label { margin-top: 16px; color: #4a5568; font-size: 16px; font-weight: 500; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <img src="${qrSrc}" alt="QR Code" />
+            <div class="label">Table ${tableNumber} — Scan to Start Order</div>
+          </div>
+        </body>
+      </html>
+    `;
+    const w = window.open("", "PRINT", "height=600,width=420");
+    if (w) {
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+      setTimeout(() => { w.print(); w.close(); }, 400);
+    }
   };
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-105 p-6 sm:p-8">
+
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
+          QR Code Generator
+        </h2>
+
+        <form onSubmit={handleSubmit(handleGenerate)} className="space-y-5">
+
+          {/* Table Number */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Table Number
+            </label>
+            <input
+              {...register("tableNumber")}
+              placeholder="20"
+              className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white placeholder:text-gray-400 ${errors.tableNumber
+                  ? "border-red-400 focus:ring-red-400"
+                  : "border-gray-200"
+                }`}
+            />
+            {errors.tableNumber && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.tableNumber.message}
+              </p>
+            )}
+          </div>
+
+          {/* QR Preview */}
+          <div className="bg-[#FFFDE8] rounded-2xl p-6 flex flex-col items-center justify-center mx-auto">
+            {qrSrc ? (
+              <Image
+                src={qrSrc}
+                alt="QR Code"
+                width={200}
+                height={200}
+                className="w-50 h-50"
+                style={{ imageRendering: "pixelated" }}
+              />
+            ) : (
+              <div className="w-50 h-50 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                Enter table number
+              </div>
+            )}
+            <p className="text-gray-500 font-medium text-sm mt-4">
+              Scan to Start Order
+            </p>
+          </div>
+
+          {/* Generate Button */}
+          <button
+            type="submit"
+            className="w-full py-3.5 rounded-xl bg-[#3366CC] text-white font-semibold text-sm hover:bg-[#2952a3] transition-all"
+          >
+            Generate Unique QR Code
+          </button>
+
+          {/* Print & Cancel */}
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={handlePrint}
+              disabled={!qrSrc}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-[#3366CC] text-[#3366CC] font-semibold text-sm hover:bg-blue-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Printer size={16} />
+              Print QR Menu Card
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm hover:bg-gray-200 transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  );
+};
+
+
+
+/* ── Main QRCodeGenerator Card ── */
+const QRCodeGenerator = () => {
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <>
-      {/* Section title */}
-      <div className="mb-3">
-        <h2 className="text-base font-bold text-gray-900">Menu</h2>
-        <p className="text-xs text-gray-400">Track stock levels and identify shortages</p>
-      </div>
-
-      {/* Category tabs + action buttons */}
-      <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
-                activeCategory === cat
-                  ? "border-blue-500 text-blue-600 bg-blue-50"
-                  : "border-gray-200 text-gray-600 bg-white hover:bg-gray-50"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-all">
-            <Plus size={13} />
-            Add Category
-          </button>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-all"
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <h3 className="text-sm font-bold text-gray-900 mb-3">QR Code Generator</h3>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="flex items-center gap-2 bg-[#3366CC] hover:bg-[#2952a3] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all"
+        >
+          <svg
+            width="15" height="15" fill="none"
+            stroke="currentColor" strokeWidth="2.2"
+            viewBox="0 0 24 24"
           >
-            <Plus size={13} />
-            Add Item
-          </button>
-          <button className="px-3 py-1.5 rounded-lg bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition-all">
-            Save
-          </button>
-        </div>
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="3" height="3" />
+          </svg>
+          Generate Table QR
+        </button>
       </div>
 
-      {/* Sections */}
-      <div className="space-y-4">
-        {sections.map((section) => (
-          <div key={section.id} className="border border-gray-200 rounded-2xl overflow-hidden">
-            {/* Section header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-              <h3 className="text-sm font-bold text-gray-900">
-                {section.title} | Layout Type: {section.layoutType}
-              </h3>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowAddModal(true)}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-all"
-                >
-                  <Plus size={12} />
-                  Add Item
-                </button>
-                <button className="flex items-center gap-1 text-xs text-blue-600 font-medium border border-blue-200 px-2.5 py-1.5 rounded-lg hover:bg-blue-50 transition-all">
-                  <Pencil size={11} />
-                  Editing Enabled
-                </button>
-              </div>
-            </div>
-
-            <div className="p-4 bg-white">
-              {section.layoutType === "Image" ? (
-                /* Image grid layout */
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {section.items.map((item) => (
-                    <ImageCard
-                      key={item.id}
-                      item={item}
-                      onEdit={() => {
-                        setEditTarget({ itemName: item.name, price: item.price });
-                        setShowEditModal(true);
-                      }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                /* List layout */
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-xs text-gray-500 border-b border-gray-100">
-                      <th className="text-left pb-2 font-medium">ID</th>
-                      <th className="text-left pb-2 font-medium">Item Name</th>
-                      <th className="text-right pb-2 font-medium">Stock</th>
-                      <th className="text-right pb-2 font-medium">Price</th>
-                      <th className="text-right pb-2 font-medium">Promo Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {section.items.map((item) => (
-                      <tr key={item.id} className="border-b border-gray-50 last:border-0">
-                        <td className="py-2 text-xs text-gray-500">{item.itemNumber}</td>
-                        <td className="py-2 text-xs text-gray-800 font-medium">{item.name}</td>
-                        <td className="py-2 text-xs text-gray-600 text-right">{item.stock}</td>
-                        <td className="py-2 text-xs text-gray-800 text-right">
-                          Rp{item.price.toLocaleString("id-ID")}
-                        </td>
-                        <td className="py-2 text-xs text-gray-500 text-right">
-                          {item.promoPrice ? `Rp${item.promoPrice.toLocaleString("id-ID")}` : "-"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Modals */}
-      <AddMenuModal
-        open={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSave={handleSaveItem}
-      />
-      <EditMenuModal
-        open={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        onSave={handleEditItem}
-        initialData={editTarget}
+      <QRCodeGeneratorModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
       />
     </>
   );
 };
 
-export default MenuLayout;
+export default QRCodeGenerator;

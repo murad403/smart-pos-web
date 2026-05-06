@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Upload } from "lucide-react";
 import Image from "next/image";
+import banner from "@/assets/logo/banner.jpg";
 
 const schema = z.object({
   restaurantName: z.string().min(1, "Restaurant name is required"),
@@ -44,7 +45,7 @@ const RestaurantInfo = () => {
 
         {/* Restaurant Name */}
         <div className="mb-4">
-          <label className="block text-xs font-medium text-gray-600 mb-1.5">
+          <label className="block text-xs font-semibold text-gray-700 mb-1.5">
             Restaurant Name
           </label>
           <input
@@ -55,13 +56,13 @@ const RestaurantInfo = () => {
 
         {/* Upload restaurant image */}
         <div className="mb-4">
-          <label className="block text-xs font-medium text-gray-600 mb-1.5">
+          <label className="block text-xs font-semibold text-gray-700 mb-1.5">
             Upload restaurant image
           </label>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-lg px-4 py-2.5 bg-white hover:bg-gray-50 transition-colors text-sm text-gray-600"
+            className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors text-sm text-gray-600"
           >
             <Upload size={15} />
             Upload
@@ -73,11 +74,16 @@ const RestaurantInfo = () => {
             onChange={handleImageChange}
             className="hidden"
           />
-          {imagePreview && (
-            <div className="mt-3 relative w-full h-44 rounded-xl overflow-hidden">
-              <Image src={imagePreview} alt="Restaurant" fill className="object-cover" />
-            </div>
-          )}
+
+          {/* Show preview if uploaded, else show default banner */}
+          <div className="mt-3 relative w-full h-44 rounded-xl overflow-hidden">
+            <Image
+              src={imagePreview ?? banner}
+              alt="Restaurant"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
 
         {/* Auto Print Orders toggle */}

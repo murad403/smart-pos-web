@@ -6,7 +6,7 @@ import MenuLayout from "./MenuLayout";
 
 const SettingsPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
+    <div className="mb-10 sm:mb-0">
       <div className="max-w-7xl mx-auto px-4 py-6">
 
         {/* Page title */}
