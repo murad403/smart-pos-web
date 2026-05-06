@@ -11,6 +11,7 @@ import ImageRowCard from "@/components/shared/ImageRowCard";
 import ImageListCard from "@/components/shared/ImageListCard";
 import ListViewTable from "@/components/shared/ListViewTable";
 import SectionHeader from "@/components/shared/SectionHeader";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 type Category = "Starter" | "Main" | "Dessert" | "Drinks";
 
@@ -46,6 +47,7 @@ const CATEGORIES: Category[] = ["Starter", "Main", "Dessert", "Drinks"];
 
 
 const MenuLayout = () => {
+  const { t } = useLocalLanguage();
   const [activeCategory, setActiveCategory] = useState<Category>("Starter");
   const [sections, setSections] = useState<Section[]>(DEMO_SECTIONS);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -62,6 +64,17 @@ const MenuLayout = () => {
   const handleEditItem = (data: MenuItemFormValues & { image?: File | null }) => {
     console.log("Edited item:", data);
     setShowEditModal(false);
+  };
+
+  const catLabel = (cat: Category) => {
+    const map: Record<Category, string> = {
+      Starter: t.starters,
+      Main: t.mains,
+      Dessert: t.desserts,
+      Drinks: t.drinks,
+    };
+
+    return map[cat];
   };
 
   const renderSectionContent = (section: Section) => {
@@ -91,8 +104,8 @@ const MenuLayout = () => {
     <>
       {/* Page title */}
       <div className="mt-4">
-        <h2 className="text-lg md:text-xl font-bold text-gray-900">Menu</h2>
-        <p className="text-sm text-gray-400">Track stock levels and identify shortages</p>
+        <h2 className="text-lg md:text-xl font-bold text-gray-900">{t.menu}</h2>
+        <p className="text-sm text-gray-400">{t.trackStockLevels}</p>
       </div>
 
       {/* Category tabs + action buttons */}
@@ -107,7 +120,7 @@ const MenuLayout = () => {
                 : "border-gray-200 text-gray-600 bg-white hover:bg-gray-50"
                 }`}
             >
-              {cat}
+              {catLabel(cat)}
             </button>
           ))}
         </div>
@@ -121,10 +134,10 @@ const MenuLayout = () => {
             className="flex items-center gap-1 px-3 py-2 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-all"
           >
             <Plus size={13} />
-            <span className="whitespace-nowrap">Add Item</span>
+            <span className="whitespace-nowrap">{t.addItem}</span>
           </button>
           <button className="px-3 py-2 rounded-lg bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition-all">
-            Save
+            {t.save}
           </button>
         </div>
       </div>

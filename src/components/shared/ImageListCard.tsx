@@ -1,7 +1,12 @@
+"use client";
+
 import { MenuItem } from "@/type/all.type";
 import Image from "next/image";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 const ImageListCard = ({ item }: { item: MenuItem }) => {
+    const { t } = useLocalLanguage();
+
     return (
         <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm flex">
             {/* Image */}
@@ -10,11 +15,11 @@ const ImageListCard = ({ item }: { item: MenuItem }) => {
                     <Image src={item.image} alt={item.name} width={500} height={500} className="object-cover" />
                 )}
                 <span className="absolute top-1.5 left-1.5 bg-red-500 text-white text-[8px] font-bold px-1 py-0.5 rounded">
-                    Promo 10% OFF
+                    {t.promo} 10% OFF
                 </span>
                 {item.labels?.includes("Must Try") && (
                     <span className="absolute top-1.5 right-1.5 bg-green-500 text-white text-[8px] font-bold px-1 py-0.5 rounded">
-                        MUST TRY
+                        {t.mustTry}
                     </span>
                 )}
             </div>
@@ -25,12 +30,12 @@ const ImageListCard = ({ item }: { item: MenuItem }) => {
                     <p className="text-base md:text-lg font-semibold text-gray-800">Rp{item.price.toLocaleString("id-ID")}</p>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5 text-xs md:text-sm text-gray-500">
-                    <span>Inventory: {item.inventory}</span>
-                    <span>Stock: {item.stock}</span>
-                    <span>{item.status}</span>
+                    <span>{t.inventory}: {item.inventory}</span>
+                    <span>{t.stock}: {item.stock}</span>
+                    <span>{item.status === "On the menu" ? t.onTheMenu : item.status}</span>
                 </div>
                 <p className="text-xs md:text-sm text-gray-500 mt-0.5">
-                    Promo Price: <span className="font-medium text-gray-700">Rp{(item.promoPrice ?? 0).toLocaleString("id-ID")}</span>
+                    {t.promoPrice}: <span className="font-medium text-gray-700">Rp{(item.promoPrice ?? 0).toLocaleString("id-ID")}</span>
                 </p>
             </div>
         </div>

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Printer } from "lucide-react";
 import * as z from "zod";
 import Image from "next/image";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 const qrCodeSchema = z.object({
   tableNumber: z
@@ -81,6 +82,14 @@ type ModalProps = {
 };
 
 const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
+  const { t } = useLocalLanguage();
+  const qrCodeSchema = z.object({
+    tableNumber: z
+      .string()
+      .min(1, t.tableNumberRequired)
+      .regex(/^\d+$/, t.tableNumberMustBeValid),
+  });
+
   const {
     register,
     handleSubmit,
@@ -114,7 +123,7 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>QR Menu Card — Table ${tableNumber}</title>
+          <title>${t.qrMenuCard} — ${t.tableNumber} ${tableNumber}</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body {
@@ -139,7 +148,7 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
         <body>
           <div class="card">
             <img src="${qrSrc}" alt="QR Code" />
-            <div class="label">Table ${tableNumber} — Scan to Start Order</div>
+            <div class="label">${t.tableNumber} ${tableNumber} — ${t.scanToStartOrder}</div>
           </div>
         </body>
       </html>
@@ -164,7 +173,7 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
 
         {/* Title */}
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
-          QR Code Generator
+          {t.qrCodeGenerator}
         </h2>
 
         <form onSubmit={handleSubmit(handleGenerate)} className="space-y-5">
@@ -172,7 +181,7 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
           {/* Table Number */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Table Number
+              {t.tableNumber}
             </label>
             <input
               {...register("tableNumber")}
@@ -202,11 +211,11 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
               />
             ) : (
               <div className="w-50 h-50 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm">
-                Enter table number
+                {t.enterTableNumber}
               </div>
             )}
             <p className="text-gray-500 font-medium text-sm mt-4">
-              Scan to Start Order
+              {t.scanToStartOrder}
             </p>
           </div>
 
@@ -215,7 +224,7 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
             type="submit"
             className="w-full py-3.5 rounded-xl bg-[#3366CC] text-white font-semibold text-sm hover:bg-[#2952a3] transition-all"
           >
-            Generate Unique QR Code
+            {t.generateUniqueQrCode}
           </button>
 
           {/* Print & Cancel */}
@@ -227,7 +236,7 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-[#3366CC] text-[#3366CC] font-semibold text-sm hover:bg-blue-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Printer size={16} />
-              Print QR Menu Card
+              {t.printQrMenuCard}
             </button>
             <button
               type="button"
@@ -248,12 +257,13 @@ const QRCodeGeneratorModal: React.FC<ModalProps> = ({ open, onClose }) => {
 
 /* ── Main QRCodeGenerator Card ── */
 const QRCodeGenerator = () => {
+  const { t } = useLocalLanguage();
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <>
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <h3 className="text-sm font-bold text-gray-900 mb-3">QR Code Generator</h3>
+        <h3 className="text-sm font-bold text-gray-900 mb-3">{t.qrCodeGenerator}</h3>
         <button
           onClick={() => setModalOpen(true)}
           className="flex items-center gap-2 bg-[#3366CC] hover:bg-[#2952a3] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all"
@@ -268,7 +278,7 @@ const QRCodeGenerator = () => {
             <rect x="3" y="14" width="7" height="7" />
             <rect x="14" y="14" width="3" height="3" />
           </svg>
-          Generate Table QR
+          {t.generateTableQr}
         </button>
       </div>
 

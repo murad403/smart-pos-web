@@ -7,9 +7,11 @@ import ReceiptCustomizationModal from "@/components/modal/ReceiptCustomizationMo
 import { DollarSign, CreditCard, Camera, Clock, Printer } from "lucide-react";
 import { FormValues, paymentSchema } from "@/validation/auth.validation";
 import Image from "next/image";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 const Payment: React.FC = () => {
     const router = useRouter();
+    const { t } = useLocalLanguage();
     const [showReceiptModal, setShowReceiptModal] = useState(false);
     const [paymentProof, setPaymentProof] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -60,14 +62,14 @@ const Payment: React.FC = () => {
                 {/* Left column — Pending Payment */}
                 <div className="md:col-span-1">
                     <div className="rounded-2xl bg-white p-4 shadow-sm">
-                        <h3 className="font-semibold text-gray-800 mb-3 text-sm">Pending Payment</h3>
+                        <h3 className="font-semibold text-gray-800 mb-3 text-sm">{t.pendingPayment}</h3>
                         <div className="bg-blue-600 text-white p-4 rounded-xl shadow-sm">
-                            <div className="font-semibold text-sm mb-1">Order #1</div>
+                            <div className="font-semibold text-sm mb-1">{t.order} #1</div>
                             <div className="flex items-center gap-1 text-xs opacity-80 mb-1">
                                 <Clock size={11} />
                                 <span>09:03 AM</span>
                             </div>
-                            <div className="text-xs opacity-80 mb-2">Takeaway</div>
+                            <div className="text-xs opacity-80 mb-2">{t.takeawayOrderType}</div>
                             <div className="text-sm font-semibold">Rp 55,000</div>
                         </div>
                     </div>
@@ -80,7 +82,7 @@ const Payment: React.FC = () => {
                         {/* Header */}
                         <div className="flex items-start justify-between mb-1">
                             <div>
-                                <h2 className="text-base font-semibold text-gray-800">Order #1</h2>
+                                <h2 className="text-base font-semibold text-gray-800">{t.order} #1</h2>
                                 <p className="text-xs text-gray-400 mt-0.5">Grace • 09:03 AM</p>
                             </div>
                         </div>
@@ -92,7 +94,7 @@ const Payment: React.FC = () => {
                                 <span className="font-medium">Rp 55,000</span>
                             </div>
                             <div className="flex items-center justify-between mb-5">
-                                <span className="font-semibold text-gray-800">Total</span>
+                                <span className="font-semibold text-gray-800">{t.total}</span>
                                 <span className="text-blue-600 font-bold text-lg">Rp 55,000</span>
                             </div>
 
@@ -100,7 +102,7 @@ const Payment: React.FC = () => {
 
                                 {/* Payment Method */}
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-600 mb-2">Payment Method</label>
+                                    <label className="block text-xs font-medium text-gray-600 mb-2">{t.paymentMethod}</label>
                                     <div className="flex gap-2">
                                         <button
                                             type="button"
@@ -111,7 +113,7 @@ const Payment: React.FC = () => {
                                                 }`}
                                         >
                                             <DollarSign size={16} />
-                                            <span>Cash</span>
+                                            <span>{t.cash}</span>
                                         </button>
                                         <button
                                             type="button"
@@ -122,14 +124,14 @@ const Payment: React.FC = () => {
                                                 }`}
                                         >
                                             <CreditCard size={16} />
-                                            <span>Transfer</span>
+                                            <span>{t.transfer}</span>
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Amount Received */}
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-600 mb-2">Amount Received</label>
+                                    <label className="block text-xs font-medium text-gray-600 mb-2">{t.amountReceived}</label>
                                     <input
                                         type="number"
                                         step="1"
@@ -148,7 +150,7 @@ const Payment: React.FC = () => {
 
                                 {/* Change Amount */}
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-600 mb-2">Change Amount</label>
+                                    <label className="block text-xs font-medium text-gray-600 mb-2">{t.changeAmount}</label>
                                     <input
                                         type="text"
                                         readOnly
@@ -159,11 +161,11 @@ const Payment: React.FC = () => {
 
                                 {/* Payment Proof */}
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-600 mb-2">Payment Proof</label>
+                                    <label className="block text-xs font-medium text-gray-600 mb-2">{t.paymentProof}</label>
                                     <label className="flex items-center justify-center gap-2 cursor-pointer border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-all">
                                         <Camera size={15} className="text-gray-500" />
                                         <span className="text-sm text-gray-500">
-                                            {paymentProof ? paymentProof.name : "Take Proof Photo"}
+                                            {paymentProof ? paymentProof.name : t.takeProofPhoto}
                                         </span>
                                         <input
                                             onChange={handleProofChange}
@@ -178,7 +180,7 @@ const Payment: React.FC = () => {
                                         <div className="mt-2 relative w-full rounded-xl overflow-hidden border border-gray-200">
                                             <Image
                                                 src={previewUrl}
-                                                alt="Payment proof preview"
+                                                alt={t.paymentProofPreviewAlt}
                                                 className="w-full max-h-48 object-cover"
                                                 width={500}
                                                 height={300}
@@ -196,14 +198,14 @@ const Payment: React.FC = () => {
 
                                 {/* Printer */}
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-600 mb-2">Printer</label>
+                                    <label className="block text-xs font-medium text-gray-600 mb-2">{t.printer}</label>
                                     <div className="flex items-center gap-2">
                                         <select
                                             {...register("printer")}
                                             className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                                         >
-                                            <option>Kitchen printer</option>
-                                            <option>Receipt printer</option>
+                                            <option>{t.kitchenPrinter}</option>
+                                            <option>{t.receiptPrinter}</option>
                                         </select>
                                         <button
                                             type="button"
@@ -211,7 +213,7 @@ const Payment: React.FC = () => {
                                             className="flex items-center gap-1.5 px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-all whitespace-nowrap"
                                         >
                                             <Printer size={14} />
-                                            Print Receipt
+                                            {t.printReceipt}
                                         </button>
                                     </div>
                                 </div>
@@ -222,7 +224,7 @@ const Payment: React.FC = () => {
                                         type="submit"
                                         className="w-full py-3.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-all"
                                     >
-                                        Paid
+                                        {t.paid}
                                     </button>
                                 </div>
 

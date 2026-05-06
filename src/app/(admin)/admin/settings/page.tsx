@@ -1,10 +1,15 @@
+"use client";
+
 import React from "react";
 import { Settings } from "lucide-react";
 import RestaurantInfo from "./RestaurantInfo";
 import QRCodeGenerator from "./QRCodeGenerator";
 import MenuLayout from "./MenuLayout";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 const SettingsPage = () => {
+  const { t } = useLocalLanguage();
+
   return (
     <div className="mb-10 sm:mb-0">
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -12,7 +17,7 @@ const SettingsPage = () => {
         {/* Page title */}
         <div className="flex items-center gap-2 mb-6">
           <Settings size={22} className="text-gray-700" />
-          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t.settingsTitle}</h1>
         </div>
 
         {/* Restaurant Info card */}

@@ -2,9 +2,11 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Clock, CheckCircle, Send } from "lucide-react";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 const PaymentSuccess: React.FC = () => {
     const router = useRouter();
+    const { t } = useLocalLanguage();
 
     const handleSubmitToKitchen = () => {
         router.push("/admin/production");
@@ -17,7 +19,7 @@ const PaymentSuccess: React.FC = () => {
                 {/* Left column — Pending Payment */}
                 <div className="md:col-span-1">
                     <div className="rounded-2xl bg-white p-4 shadow-sm">
-                        <h3 className="font-semibold text-gray-800 mb-3 text-sm">Pending Payment</h3>
+                        <h3 className="font-semibold text-gray-800 mb-3 text-sm">{t.pendingPayment}</h3>
                         <div
                             className="text-white p-4 rounded-xl shadow-sm relative"
                             style={{
@@ -30,14 +32,14 @@ const PaymentSuccess: React.FC = () => {
                                     className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full"
                                     style={{ backgroundColor: "rgba(255,255,255,0.25)", color: "#fff" }}
                                 >
-                                    Paid
+                                    {t.paid}
                                 </span>
                             </div>
                             <div className="flex items-center gap-1 text-xs opacity-80 mb-1">
                                 <Clock size={11} />
                                 <span>11:05 AM</span>
                             </div>
-                            <div className="text-xs opacity-80 mb-2">Takeaway</div>
+                            <div className="text-xs opacity-80 mb-2">{t.takeawayOrderType}</div>
                             <div className="text-sm font-semibold">Rp 55,000</div>
                         </div>
                     </div>
@@ -62,7 +64,7 @@ const PaymentSuccess: React.FC = () => {
 
                             <div className="border-t border-dashed border-gray-200 pt-4">
                                 <div className="flex items-center justify-between mb-6">
-                                    <span className="font-semibold text-gray-800">Total</span>
+                                    <span className="font-semibold text-gray-800">{t.total}</span>
                                     <span className="text-red-600 font-bold text-xl">Rp 55,000</span>
                                 </div>
                             </div>
@@ -77,9 +79,9 @@ const PaymentSuccess: React.FC = () => {
                             >
                                 <div className="flex items-center gap-2 mb-1">
                                     <CheckCircle size={22} className="text-green-500" fill="#22C55E" stroke="#fff" />
-                                    <span className="font-semibold text-green-700 text-sm">Paid</span>
+                                    <span className="font-semibold text-green-700 text-sm">{t.paid}</span>
                                 </div>
-                                <p className="text-xs text-green-600 ml-[30px]">Payment Method: Card</p>
+                                <p className="text-xs text-green-600 ml-7.5">{t.paymentMethod}: {t.card}</p>
                             </div>
 
                             {/* Submit Order to Kitchen Button */}
@@ -92,7 +94,7 @@ const PaymentSuccess: React.FC = () => {
                                 }}
                             >
                                 <Send size={16} className="-rotate-45" />
-                                Submit Order to Kitchen
+                                {t.submitOrderToKitchen}
                             </button>
                         </div>
                     </div>

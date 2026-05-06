@@ -1,17 +1,22 @@
+"use client";
+
 import { MenuItem } from "@/type/all.type";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 
 
 const ListViewTable = ({ items }: { items: MenuItem[] }) => {
+    const { t } = useLocalLanguage();
+
     return (
         <table className="w-full text-sm md:text-base">
             <thead>
                 <tr className="border-b border-gray-100 text-xs text-gray-500">
                     <th className="text-left pb-2 font-medium">ID</th>
-                    <th className="text-left pb-2 font-medium">Item Name</th>
-                    <th className="text-right pb-2 font-medium">Stock</th>
-                    <th className="text-right pb-2 font-medium">Price</th>
-                    <th className="text-right pb-2 font-medium">Promo Price</th>
+                    <th className="text-left pb-2 font-medium">{t.itemName}</th>
+                    <th className="text-right pb-2 font-medium">{t.stock}</th>
+                    <th className="text-right pb-2 font-medium">{t.price}</th>
+                    <th className="text-right pb-2 font-medium">{t.promoPrice}</th>
                 </tr>
             </thead>
             <tbody>

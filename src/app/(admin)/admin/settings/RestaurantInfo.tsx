@@ -6,15 +6,19 @@ import * as z from "zod";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import banner from "@/assets/logo/banner.jpg";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
-const schema = z.object({
-  restaurantName: z.string().min(1, "Restaurant name is required"),
-  autoPrintOrders: z.boolean(),
-});
-
-type FormValues = z.infer<typeof schema>;
+type FormValues = {
+  restaurantName: string;
+  autoPrintOrders: boolean;
+};
 
 const RestaurantInfo = () => {
+  const { t } = useLocalLanguage();
+  const schema = z.object({
+    restaurantName: z.string().min(1, t.restaurantNameRequired),
+    autoPrintOrders: z.boolean(),
+  });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [autoPrint, setAutoPrint] = useState(true);
@@ -46,7 +50,7 @@ const RestaurantInfo = () => {
         {/* Restaurant Name */}
         <div className="mb-4">
           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-            Restaurant Name
+            {t.restaurantNameLabel}
           </label>
           <input
             {...register("restaurantName")}
@@ -57,7 +61,7 @@ const RestaurantInfo = () => {
         {/* Upload restaurant image */}
         <div className="mb-4">
           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-            Upload restaurant image
+            {t.uploadRestaurantImage}
           </label>
           <button
             type="button"
@@ -65,7 +69,7 @@ const RestaurantInfo = () => {
             className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors text-sm text-gray-600"
           >
             <Upload size={15} />
-            Upload
+            {t.upload}
           </button>
           <input
             ref={fileInputRef}
@@ -88,7 +92,7 @@ const RestaurantInfo = () => {
 
         {/* Auto Print Orders toggle */}
         <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-gray-800">Auto Print Orders</span>
+          <span className="text-sm font-semibold text-gray-800">{t.autoPrintOrders}</span>
           <button
             type="button"
             onClick={() => {

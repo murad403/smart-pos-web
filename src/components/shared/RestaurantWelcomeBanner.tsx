@@ -6,7 +6,7 @@ import { UtensilsCrossed } from "lucide-react";
 import banner from "@/assets/logo/banner.jpg";
 import useLocalLanguage from "@/hooks/useLocalLanguage";
 
-const RestaurantWelcomeBanner = () => {
+const RestaurantWelcomeBanner = ({ href }: { href: string }) => {
     const { t } = useLocalLanguage();
 
     return (
@@ -31,7 +31,7 @@ const RestaurantWelcomeBanner = () => {
                     SmartPOS Restaurant
                 </h2>
                 <Link
-                    href="/customer/select-order-type"
+                    href={href}
                     className="flex items-center gap-2 bg-white text-gray-900 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-all shadow-lg text-sm sm:text-base"
                 >
                     <UtensilsCrossed size={18} />

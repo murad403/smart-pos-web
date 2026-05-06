@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Camera, Printer } from "lucide-react";
 import Image from "next/image";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 type Props = {
   open: boolean;
@@ -21,6 +22,7 @@ const schema = z.object({
 type SchemaType = z.infer<typeof schema>;
 
 const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) => {
+  const { t } = useLocalLanguage();
   const { register, handleSubmit } = useForm<SchemaType>({ resolver: zodResolver(schema) });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -37,7 +39,7 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Receipt</title>
+          <title>${t.receipt}</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body {
@@ -221,13 +223,13 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
           <hr class="divider" />
 
           <!-- Receipt title -->
-          <div class="receipt-title">Receipt</div>
+          <div class="receipt-title">${t.receipt}</div>
 
           <!-- Order type -->
           <div class="order-type-row">
-            <span class="order-type-label">Order Type</span>
+            <span class="order-type-label">${t.orderType}</span>
             <span class="order-type-value">
-              Dine In
+              ${t.dineIn}
               <span class="badge-green">✓</span>
             </span>
           </div>
@@ -235,11 +237,11 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
           <!-- Meta -->
           <div class="meta-grid">
             <div>
-              <div class="meta-label">Date</div>
+              <div class="meta-label">${t.date}</div>
               <div class="meta-value">26 Apr 2026, 13:16</div>
             </div>
             <div>
-              <div class="meta-label">Order Number</div>
+              <div class="meta-label">${t.orderNumber}</div>
               <div class="meta-value" style="font-size:11px;">🖨 CMNSCMNSOIOTZY</div>
             </div>
           </div>
@@ -247,14 +249,14 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
           <!-- Table -->
           <div class="table-section">
             <div class="table-icon">🪑</div>
-            <div class="meta-label">Table Number</div>
+            <div class="meta-label">${t.tableNumber}</div>
             <div class="table-number">H3</div>
           </div>
 
           <hr class="divider-solid" />
 
           <!-- Items -->
-          <div class="section-title">Ordered Items</div>
+          <div class="section-title">${t.orderedItems}</div>
           <div class="item-row">
             <div><span class="item-qty">2x</span><span class="item-name">DIRTY LATTE</span></div>
             <div class="item-price">Rp70.000</div>
@@ -272,18 +274,18 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
           <hr class="divider-solid" />
 
           <!-- Summary -->
-          <div class="summary-row"><span>Subtotal (3 menu)</span><span>Rp173.000</span></div>
-          <div class="summary-row"><span>Platform Fee</span><span>Rp1.800</span></div>
-          <div class="summary-row"><span>Other fees ▾</span><span>Rp17.300</span></div>
-          <div class="summary-row"><span>Payment Method</span><span>QRIS</span></div>
-          <div class="summary-row total"><span>Total</span><span>Rp192.100</span></div>
+          <div class="summary-row"><span>${t.subtotal} (3 menu)</span><span>Rp173.000</span></div>
+          <div class="summary-row"><span>${t.platformFee}</span><span>Rp1.800</span></div>
+          <div class="summary-row"><span>${t.otherFees} ▾</span><span>Rp17.300</span></div>
+          <div class="summary-row"><span>${t.paymentMethod}</span><span>QRIS</span></div>
+          <div class="summary-row total"><span>${t.total}</span><span>Rp192.100</span></div>
 
           <!-- Feedback -->
           <div class="feedback-box">
             <div class="feedback-emoji">🤙</div>
             <div>
-              <div class="feedback-text">Let's give feedback on our service!</div>
-              <div class="feedback-link">Give Feedback</div>
+              <div class="feedback-text">${t.giveFeedbackPrompt}</div>
+              <div class="feedback-link">${t.giveFeedback}</div>
             </div>
           </div>
 
@@ -313,26 +315,26 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
       <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm p-6 shadow-xl">
 
         {/* Title */}
-        <h3 className="text-base font-bold text-center text-gray-900 mb-5">Receipt Customization</h3>
+        <h3 className="text-base font-bold text-center text-gray-900 mb-5">{t.receiptCustomization}</h3>
 
         <form onSubmit={handleSubmit(handlePrint)} className="space-y-4">
 
           {/* Company Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Company Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">{t.companyName}</label>
             <input
               {...register("companyName")}
-              placeholder="Type...."
+              placeholder={t.typePlaceholder}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white placeholder:text-gray-300"
             />
           </div>
 
           {/* Contact Info */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Contact Info</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">{t.contactInfo}</label>
             <input
               {...register("contactInfo")}
-              placeholder="Type...."
+              placeholder={t.typePlaceholder}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white placeholder:text-gray-300"
             />
           </div>
@@ -345,7 +347,7 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
                 : <Camera size={16} className="text-gray-400" />
               }
               <span className="text-sm text-gray-500">
-                {logoFile ? logoFile.name : "Upload Logo"}
+                {logoFile ? logoFile.name : t.uploadLogo}
               </span>
               <input onChange={handleLogoChange} type="file" accept="image/*" className="hidden" />
             </label>
@@ -353,10 +355,10 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
 
           {/* Custom Note */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Custom Note</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">{t.customNote}</label>
             <textarea
               {...register("customNote")}
-              placeholder="Type...."
+              placeholder={t.typePlaceholder}
               rows={4}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white placeholder:text-gray-300 resize-none"
             />
@@ -369,14 +371,14 @@ const ReceiptCustomizationModal: React.FC<Props> = ({ open, onClose, onPrint }) 
               className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl text-sm font-semibold hover:bg-blue-700 transition-all"
             >
               <Printer size={15} />
-              Print Receipt
+              {t.printReceipt}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="px-5 py-3 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-all"
             >
-              Cancel
+              {t.cancel}
             </button>
           </div>
 
