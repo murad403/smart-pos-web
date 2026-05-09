@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import useLocalLanguage from "@/hooks/useLocalLanguage";
 
 type Order = {
     orderId: string;
     customerName: string;
-    table: string;
+    tableNumber: number;
     item: string;
     quantity: number;
     amount: number;
@@ -18,7 +19,7 @@ const unpaidOrders: Order[] = [
     {
         orderId: "#01",
         customerName: "Grace",
-        table: "Table 4",
+        tableNumber: 4,
         item: "Nasi Goreng Spesial",
         quantity: 1,
         amount: 45000,
@@ -29,7 +30,7 @@ const unpaidOrders: Order[] = [
     {
         orderId: "#01",
         customerName: "Grace",
-        table: "Table 4",
+        tableNumber: 4,
         item: "Nasi Goreng Spesial",
         quantity: 1,
         amount: 45000,
@@ -43,7 +44,7 @@ const paidOrders: Order[] = [
     {
         orderId: "#01",
         customerName: "Grace",
-        table: "Table 4",
+        tableNumber: 4,
         item: "Nasi Goreng Spesial",
         quantity: 1,
         amount: 45000,
@@ -54,7 +55,7 @@ const paidOrders: Order[] = [
     {
         orderId: "#03",
         customerName: "Grace",
-        table: "Table 4",
+        tableNumber: 4,
         item: "Nasi Goreng Spesial",
         quantity: 1,
         amount: 45000,
@@ -78,16 +79,18 @@ function OrderCard({
     order: Order;
     showMarkAsPaid: boolean;
 }) {
+    const { t } = useLocalLanguage();
+
     return (
         <div className="bg-white rounded-xl border-l-2 border-red-400 px-5 py-4 flex items-start justify-between shadow-sm">
             {/* Left side */}
             <div className="flex flex-col gap-1">
                 <span className="text-xs text-gray-400 font-medium">
-                    Order Id{" "}
+                    {t.orderIdLabel}{" "}
                     <span className="text-gray-600 font-semibold">{order.orderId}</span>
                 </span>
                 <p className="text-base font-bold text-gray-800">{order.customerName}</p>
-                <p className="text-sm text-gray-700">{order.table}</p>
+                <p className="text-sm text-gray-700">{t.table} {order.tableNumber}</p>
                 <p className="text-sm text-gray-700">
                     {order.item} x{order.quantity}
                 </p>
@@ -96,11 +99,11 @@ function OrderCard({
                 <div className="flex items-center gap-2 mt-1">
                     {order.paymentStatus === "just_arrived" ? (
                         <span className="text-xs font-semibold text-orange-500 bg-orange-50 border border-orange-200 rounded-full px-2.5 py-0.5">
-                            Just Arrived
+                            {t.justArrived}
                         </span>
                     ) : (
                         <span className="text-xs font-semibold text-blue-500 bg-blue-50 border border-blue-200 rounded-full px-2.5 py-0.5">
-                            Paid
+                            {t.paid}
                         </span>
                     )}
                     <span className="text-xs text-gray-400">{order.time}</span>
@@ -116,7 +119,7 @@ function OrderCard({
                         : "bg-pink-500 text-white"
                         }`}
                 >
-                    {order.status === "new" ? "NEW" : "Done"}
+                    {order.status === "new" ? t.newLabel : t.completed}
                 </span>
 
                 <span className="text-base font-bold text-gray-800">
@@ -126,12 +129,12 @@ function OrderCard({
                 {showMarkAsPaid ? (
                     <Link href={`/admin/payment/${23}`}>
                         <button className="bg-blue-500 hover:bg-blue-600 transition-colors text-white text-xs font-semibold rounded-lg px-4 py-2">
-                            Mark as Paid
+                            {t.markAsPaid}
                         </button>
                     </Link>
                 ) : (
                     <button className="bg-gray-100 text-gray-500 text-xs font-semibold rounded-lg px-5 py-2 cursor-default">
-                        Paid
+                        {t.paid}
                     </button>
                 )}
             </div>
@@ -140,6 +143,7 @@ function OrderCard({
 }
 
 export default function OrdersPage() {
+    const { t } = useLocalLanguage();
     const [activeTab, setActiveTab] = useState<"paid" | "unpaid">("paid");
 
     return (
@@ -153,7 +157,7 @@ export default function OrdersPage() {
                         : "bg-white text-gray-500 border border-gray-200"
                         }`}
                 >
-                    Paid
+                    {t.paid}
                 </button>
                 <button
                     onClick={() => setActiveTab("unpaid")}
@@ -162,7 +166,7 @@ export default function OrdersPage() {
                         : "bg-white text-gray-500 border border-gray-200"
                         }`}
                 >
-                    Unpaid orders
+                    {t.unpaidOrders}
                 </button>
             </div>
 
@@ -171,7 +175,7 @@ export default function OrdersPage() {
                     {/* Waiting for Payment */}
                     <section>
                         <h2 className="text-lg font-bold text-gray-800 mb-3">
-                            Waiting for Payment
+                            {t.waitingForPayment}
                         </h2>
                         <div className="flex flex-col gap-3">
                             {unpaidOrders.map((order, idx) => (
@@ -183,7 +187,7 @@ export default function OrdersPage() {
                     {/* Recently Paid */}
                     <section>
                         <h2 className="text-lg font-bold text-gray-800 mb-3">
-                            Recently paid
+                            {t.recentlyPaid}
                         </h2>
                         <div className="flex flex-col gap-3">
                             {paidOrders.map((order, idx) => (

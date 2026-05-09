@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { UI_MESSAGES, mapStoredLocaleToUILang, UILang } from "@/lib/messages";
 
 const STORAGE_KEY = "smart-pos-locale"; // used by MainWrapper
+type UIMessageMap = typeof UI_MESSAGES.EN;
 
 export default function useLocalLanguage() {
   const [language, setLanguageState] = useState<UILang>("EN");
@@ -65,7 +66,7 @@ export default function useLocalLanguage() {
     }
   };
 
-  const t = UI_MESSAGES[language];
+  const t = UI_MESSAGES[language] as UIMessageMap;
 
   return { t, language, setLanguage } as const;
 }
