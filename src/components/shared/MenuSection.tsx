@@ -1,15 +1,11 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import food1 from "@/assets/images/food1.jpg";
 import food2 from "@/assets/images/food2.png";
 import MenuCard, { MenuItem } from "@/components/shared/MenuCard";
-import CustomPagination from "@/components/shared/CustomPagination";
 import AddOrderModal from "@/components/modal/AddOrderModal";
 import useLocalLanguage from "@/hooks/useLocalLanguage";
-
-const ITEMS_PER_PAGE = 8;
 
 type Category = "All" | "Starters" | "Mains" | "Drinks" | "Desserts";
 
@@ -55,12 +51,9 @@ const ALL_ITEMS = generateItems();
 
 const MenuSection = () => {
   const { t } = useLocalLanguage();
-  const searchParams = useSearchParams();
-  const tableId = searchParams.get("table") || "4";
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<Category>("All");
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<MenuItem[]>([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -72,20 +65,12 @@ const MenuSection = () => {
     );
   }, [search]);
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
   const handleSearch = (val: string) => {
     setSearch(val);
-    setCurrentPage(1);
   };
 
   const handleCategoryChange = (cat: Category) => {
     setCategory(cat);
-    setCurrentPage(1);
   };
 
   const handleSelect = (item: MenuItem) => {
@@ -96,7 +81,7 @@ const MenuSection = () => {
     });
   };
 
-  const handlePayAtCounter = (name: string) => {
+  const handlePayAtCounter = () => {
     setShowModal(false);
     setSelectedItems([]);
   };
@@ -113,70 +98,58 @@ const MenuSection = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-4">
-
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder={t.searchMenu}
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Category tabs */}
-        <div className="flex items-center gap-2 mb-5 flex-wrap">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => handleCategoryChange(cat)}
-              className={`px-4 py-1.5 rounded-xl text-sm font-medium transition-all border ${
-                category === cat
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              {catLabel(cat)}
-            </button>
-          ))}
-        </div>
-
-        {/* Menu Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-4">
-          {paginated.map((item) => (
-            <MenuCard
-              key={item.id}
-              item={item}
-              isSelected={!!selectedItems.find((s) => s.id === item.id)}
-              onSelect={handleSelect}
+    <div className="">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-white/70 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6">
+          <div className="relative mb-4">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder={t.searchMenu}
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full rounded-2xl border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm text-gray-700 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             />
-          ))}
-        </div>
+          </div>
 
-        {/* Pagination */}
-        <div className="pb-36 sm:pb-8">
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition-all ${
+                  category === cat
+                    ? "border-blue-600 bg-blue-600 text-white shadow-[0_10px_24px_rgba(37,99,235,0.22)]"
+                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                {catLabel(cat)}
+              </button>
+            ))}
+          </div>
 
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((item) => (
+              <MenuCard
+                key={item.id}
+                item={item}
+                isSelected={!!selectedItems.find((s) => s.id === item.id)}
+                onSelect={handleSelect}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Bottom selected bar */}
       {selectedItems.length > 0 && (
-        <div className="fixed bottom-16 sm:bottom-0 left-0 right-0 bg-white border-t shadow-lg px-4 py-3 flex items-center justify-between z-[60]">
+        <div className="fixed bottom-16 left-0 right-0 z-[60] flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 shadow-lg sm:bottom-0">
           <span className="text-gray-700 font-medium text-sm">
             {selectedItems.length} {t.itemsSelected}
           </span>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-all"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-blue-700"
           >
             {t.next} →
           </button>
