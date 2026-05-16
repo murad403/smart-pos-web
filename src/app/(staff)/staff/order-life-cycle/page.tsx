@@ -50,7 +50,7 @@ const OrderLifeCycle = () => {
     ];
 
     return (
-        <div className="min-h-screen">
+        <div>
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <h1 className="text-2xl font-bold text-gray-900">{t.orderLifeCycle}</h1>
                 <p className="text-sm text-gray-500 mb-6">{t.activeOrders}</p>

@@ -48,8 +48,8 @@ export const appMessages: Record<Locale, AppMessages> = {
       forgotPassword: "Forgot Password?",
       submit: "Sign In",
       validation: {
-        invalidEmail: "Please enter a valid email address.",
-        passwordMin: "Password must be at least 6 characters.",
+        invalidEmail: "Email is required.",
+        passwordMin: "Password is required.",
       },
     },
     welcome: {

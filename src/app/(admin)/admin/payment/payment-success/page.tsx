@@ -13,7 +13,7 @@ const PaymentSuccess: React.FC = () => {
     };
 
     return (
-        <div className="p-4 sm:p-6 min-h-screen bg-[#F5F5F0]">
+        <div className="p-4 sm:p-6">
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
 
                 {/* Left column — Pending Payment */}

@@ -147,7 +147,7 @@ export default function OrdersPage() {
     const [activeTab, setActiveTab] = useState<"paid" | "unpaid">("paid");
 
     return (
-        <div className="max-w-7xl mx-auto min-h-screen px-4 py-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
             {/* Tabs */}
             <div className="flex gap-2 mb-6">
                 <button

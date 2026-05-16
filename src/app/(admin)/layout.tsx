@@ -7,12 +7,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     const pathName = usePathname();
     const isVisible = pathName.includes("/admin-welcome");
     return (
-        <section>
+        <section className="min-h-screen bg-[#FAF8F2]">
             {
                 !isVisible && <AdminNavbar />
             }
 
-            <div className={`${isVisible ? "pt-0 pb-0" : "pt-18 pb-12 md:pb-0"} bg-[#FAF8F2]`}>
+            <div className={`${isVisible ? "pt-0 pb-0" : "pt-18 pb-24 md:pb-0"}`}>
                 {children}
             </div>
         </section>
